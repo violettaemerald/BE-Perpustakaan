@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum StatusPeminjaman {
+  dipinjam
+  dikembalikan
+  terlambat
+}
+
+model Student {
+  id         Int          @id @default(autoincrement())
+  nis        String       @unique
+  name       String
+  email      String?      @unique
+  kelas      String
+  jurusan    String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  peminjaman Peminjaman[]
+}
+
+model WaliKelas {
+  id_WaliKelas   Int      @id @default(autoincrement())
+  name_WaliKelas String
+  no_telp        String?  @unique
+  mapel          String
+  alamat         String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Buku {
+  id_buku    Int          @id @default(autoincrement())
+  judul      String       @unique
+  penulis    String
+  tahun      String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  peminjaman Peminjaman[]
+}
+
+model Peminjaman {
+  id_peminjaman Int @id @default(autoincrement())
+
+  student_id Int
+  buku_id    Int
+
+  tanggalPeminjaman DateTime         @default(now())
+  batasKembali      DateTime
+  status            StatusPeminjaman
+
+  student Student @relation(fields: [student_id], references: [id])
+  buku    Buku    @relation(fields: [buku_id], references: [id_buku])
+  // nama relasi ; tabel/model yang dituju ; @relation(fields: [nama field dalam tabel ini, harus FK], references: [nama field di tabel asal, harus PK])
+}
