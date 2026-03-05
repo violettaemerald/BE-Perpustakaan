@@ -13,6 +13,10 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js'
 import { Roles } from '../auth/decorators/roles.decorator.js'
 import { RoleGuard } from '../auth/guards/roles.guard.js'
 import { UserRole } from '@prisma/client'
+import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
+
+@ApiTags('Peminjaman')
+@ApiBearerAuth()
 
 @Controller('peminjaman')
 export class PeminjamanController {
@@ -28,13 +32,15 @@ export class PeminjamanController {
   @Post(':id/pengembalian')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.admin, UserRole.petugas)
-  pengembalian (@Param('id', ParseIntPipe) id: number) {
+  @ApiOperation({ summary: 'Menampilkan data peminjaman sesuai id' })
+  pengembalian (@Param('id', ParseIntPipe) id: number){
     return this.peminjamanService.pengembalian(id)
   }
 
   @Get()
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.admin, UserRole.petugas)
+  @ApiOperation({ summary: 'Menampilkan seluruh data peminjaman' })
   findAll () {
     return this.peminjamanService.findAll()
   }
@@ -42,6 +48,7 @@ export class PeminjamanController {
   @Get('tanggal/:tanggal')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.admin, UserRole.petugas)
+  @ApiOperation({ summary: 'Menampilkan seluruh data peminjaman sesuai tanggal' })
   findByTanggal (@Param('tanggal') tanggal: string) {
     return this.peminjamanService.findByTanggal(String(tanggal))
   }
@@ -49,6 +56,7 @@ export class PeminjamanController {
   @Get(':id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.admin, UserRole.petugas, UserRole.member)
+  @ApiOperation({ summary: 'Menampilkan seluruh data peminjaman sesuai id' })
   findOne (@Param('id') id: string) {
     return this.peminjamanService.findOne(Number(id))
   }
