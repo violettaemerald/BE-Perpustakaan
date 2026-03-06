@@ -9,7 +9,7 @@ import { UserRole } from '@prisma/client';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
 
 @ApiTags('Student')
-@ApiBearerAuth()
+@ApiBearerAuth('access-token')
 
 
 @Controller('students')
@@ -18,7 +18,8 @@ export class StudentsController {
 
 
   @Post()
-  @ApiOperation({ summary: 'Menampilkan data siswa' })
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOperation({ summary: 'Menambahkan data siswa' })
   create(@Body() dto: CreateStudentDto) {
     return this.studentsService.create(dto);
   }
@@ -36,7 +37,7 @@ export class StudentsController {
   @Get('nis/:nis')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.admin, UserRole.petugas, UserRole.member)
-  @ApiOperation({ summary: 'Menampilkan data siswa' })
+  @ApiOperation({ summary: 'Menampilkan data siswa sesuai nis' })
   findNis(@Param('nis') nis: string) {
     return this.studentsService.findNis(String(nis));
   }
@@ -44,7 +45,7 @@ export class StudentsController {
   @Get('name/:name')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.admin, UserRole.petugas, UserRole.member)
-  @ApiOperation({ summary: 'Menampilkan data siswa' })
+  @ApiOperation({ summary: 'Menampilkan data siswa sesuai nama' })
   findName(@Param('name') name: string) {
     return this.studentsService.findName(String(name));
   }
@@ -52,7 +53,7 @@ export class StudentsController {
   @Get(':id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.admin, UserRole.petugas, UserRole.member)
-  @ApiOperation({ summary: 'Menampilkan data siswa' })
+  @ApiOperation({ summary: 'Menampilkan data siswa sesuai id' })
   findOne(@Param('id') id: string) {
     return this.studentsService.findOne(Number(id));
   }
@@ -61,7 +62,7 @@ export class StudentsController {
   @Put(':id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.admin, UserRole.member)
-  @ApiOperation({ summary: 'Menampilkan data siswa' })
+  @ApiOperation({ summary: 'Memperbarui data siswa' })
   update(@Param('id') id: string, @Body() dto: UpdateStudentDto) {
     return this.studentsService.update(Number(id), dto);
   }
@@ -70,7 +71,7 @@ export class StudentsController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.admin, UserRole.member)
-  @ApiOperation({ summary: 'Menampilkan data siswa' })
+  @ApiOperation({ summary: 'Menghapus data siswa' })
   remove(@Param('id') id: string) {
     return this.studentsService.remove(Number(id));
   }
