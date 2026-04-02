@@ -18,7 +18,6 @@ export class StudentsController {
 
 
   @Post()
-  @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Menambahkan data siswa' })
   create(@Body() dto: CreateStudentDto) {
     return this.studentsService.create(dto);
