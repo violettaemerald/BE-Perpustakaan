@@ -38,16 +38,12 @@ export class BukuController {
   }
 
   @Get('judul/:judul')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles(UserRole.admin, UserRole.petugas, UserRole.member)
   @ApiOperation({ summary: 'Menampilkan buku sesuai judul' })
   findByJudul (@Param('judul') judul: string) {
     return this.BukuService.findByJudul(String(judul))
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles(UserRole.admin, UserRole.petugas, UserRole.member)
   @ApiOperation({ summary: 'Menampilkan data buku sesuai id' })
   findById (@Param('id') id: string) {
     return this.BukuService.findById(Number(id))

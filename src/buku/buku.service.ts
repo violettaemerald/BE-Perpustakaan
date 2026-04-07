@@ -12,7 +12,7 @@ export class BukuService {
   }
 
   async findAll () {
-    return this.prisma.buku.findMany({ orderBy: { id_buku: 'desc' } })
+    return this.prisma.buku.findMany({ orderBy: { id_buku: 'desc' }})
   }
 
   async findById (id_buku: number) {
